@@ -1,24 +1,57 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import { createBoard } from "./Board";
+
+const BOARD_SIZE = 5;
 
 function App() {
+  const [board, setBoard] = useState(createBoard(BOARD_SIZE));
+  const [boardIsRevealed, setBoardIsRevealed] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+
+  const reload = () => {
+    setBoard(createBoard(BOARD_SIZE));
+    setIsFinished(false);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <div>
+        <button
+          disabled={isFinished}
+          onClick={() => setBoardIsRevealed(!boardIsRevealed)}
         >
-          Learn React
-        </a>
-      </header>
+          {boardIsRevealed ? "Stop cheating" : "Cheat"}
+        </button>
+        <button
+          style={{ backgroundColor: isFinished ? "orange" : "" }}
+          onClick={reload}
+        >
+          Reload
+        </button>
+        <table style={{ opacity: isFinished ? 0.7 : 1 }}>
+          <tbody>
+            {board.map((row, rowIndex) => {
+              return (
+                <tr key={rowIndex}>
+                  {row.map((cell) => (
+                    <td
+                      style={{
+                        backgroundColor: "",
+                      }}
+                      key={cell.y}
+                      onClick={() => {}}
+                    >
+                      {(cell.revealed || boardIsRevealed) &&
+                        (cell.val === "bomb" ? "💣" : cell.val)}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
