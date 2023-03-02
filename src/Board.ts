@@ -18,12 +18,22 @@ export const createEmptyBoard = (size: number): Board => {
   return cells;
 };
 
+export const forEachCell = (board: Board, fn: (cell: Cell) => void) => {
+  board.forEach((row) => {
+    row.forEach((cell) => {
+      fn(cell);
+    });
+  });
+};
+
+export const populateWithBombs = (board: Board, bombRatio = 0.2) => {
+  forEachCell(board, (cell) => {
+    cell.val = Math.random() < bombRatio ? "bomb" : 0;
+  });
+};
 /*
-export const forEachCell = (board: Board, fn: (cell: Cell) => void) => {};
 
 export const getNeighbors = (board: Board, cell: Cell): Cell[] => {};
-
-export const populateWithBombs = (board: Board, bombRatio = 0.2) => {};
 
 export const populateWithNeighborsCount = (board: Board) => {};
 
@@ -34,6 +44,7 @@ export const getGameStatus = (
 
 export const createBoard = (size = 5, bombRatio = 0.2) => {
   const b = createEmptyBoard(size);
+  populateWithBombs(b, bombRatio);
 
   return b;
 };

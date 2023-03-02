@@ -14,6 +14,8 @@ function App() {
     setIsFinished(false);
   };
 
+  console.log(board);
+
   return (
     <div className="App">
       <div>
