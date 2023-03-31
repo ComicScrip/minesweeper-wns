@@ -86,19 +86,10 @@ export const createBoard = (size = 5, bombRatio = 0.2) => {
 };
 
 export const getGameStatus = (board: Board): "won" | "lost" | "inProgress" => {
-  let result: "won" | "lost" | "inProgress" = "inProgress";
-  const cellsCount = board.length * board.length;
-  const bombCount = board.flat().filter((cell) => cell.val === "bomb").length;
-  let cellsUntilWin = cellsCount - bombCount;
-  console.log({ cellsUntilWin });
-  forEachCell(board, (cell) => {
-    if (cell.val !== "bomb" && cell.revealed) {
-      cellsUntilWin -= 1;
-      if (cellsUntilWin === 0 && result !== "lost") result = "won";
-    }
-    if (cell.val === "bomb" && cell.revealed) {
-      result = "lost";
-    }
-  });
-  return result;
+  const allCells = board.flat();
+  const notBombs = allCells.filter((cell) => cell.val !== "bomb");
+  const lost = allCells.some((cell) => cell.revealed && cell.val === "bomb");
+  if (lost) return "lost";
+  const won = notBombs.every((cell) => cell.revealed);
+  return won ? "won" : "inProgress";
 };
