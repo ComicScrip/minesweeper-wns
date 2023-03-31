@@ -1,18 +1,25 @@
-interface Cell {
+export interface Cell {
   x: number;
   y: number;
   val: number | "bomb";
   revealed: boolean;
+  backgroundColor: string;
 }
 
-type Board = Cell[][];
+export type Board = Cell[][];
 
 export const createEmptyBoard = (size: number): Board => {
   const cells: Board = new Array(size);
   for (let x = 0; x < size; x++) {
     cells[x] = new Array(size);
     for (let y = 0; y < size; y++) {
-      cells[x][y] = { x, y, revealed: false, val: 0 };
+      cells[x][y] = {
+        x,
+        y,
+        revealed: false,
+        val: 0,
+        backgroundColor: "transparent",
+      };
     }
   }
   return cells;
@@ -78,8 +85,20 @@ export const createBoard = (size = 5, bombRatio = 0.2) => {
   return b;
 };
 
-/*
 export const getGameStatus = (board: Board): "won" | "lost" | "inProgress" => {
-
+  let result: "won" | "lost" | "inProgress" = "inProgress";
+  const cellsCount = board.length * board.length;
+  const bombCount = board.flat().filter((cell) => cell.val === "bomb").length;
+  let cellsUntilWin = cellsCount - bombCount;
+  console.log({ cellsUntilWin });
+  forEachCell(board, (cell) => {
+    if (cell.val !== "bomb" && cell.revealed) {
+      cellsUntilWin -= 1;
+      if (cellsUntilWin === 0 && result !== "lost") result = "won";
+    }
+    if (cell.val === "bomb" && cell.revealed) {
+      result = "lost";
+    }
+  });
+  return result;
 };
-*/
